@@ -1,9 +1,9 @@
 package com.sudo.weather.domain.entities
 
-import java.time.LocalDate
+import java.util.Calendar
 
 data class Weather(
-    val date: LocalDate,
+    val date: Calendar,
     // Mô tả thời tiết hiện tai.
     val weatherText: String,
     // Nhiệt độ hiện tại. Unit: C
@@ -39,4 +39,4 @@ data class Weather(
     // Lượng mưa tổng hợp (mm)
     val precipitationSummary: Double,
     val link: String?,
-    )
+)

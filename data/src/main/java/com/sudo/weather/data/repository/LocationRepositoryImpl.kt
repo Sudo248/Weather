@@ -10,7 +10,9 @@ import com.sudo.weather.domain.common.Failure
 import javax.inject.Inject
 import com.sudo.weather.domain.common.Status
 import com.sudo.weather.domain.repository.LocationRepository
+import javax.inject.Singleton
 
+@Singleton
 class LocationRepositoryImpl @Inject constructor(
     private val locationApi: LocationApi,
     private val fusedLocationProviderClient: FusedLocationProviderClient,

@@ -6,12 +6,9 @@ import com.sudo.weather.data.models.responses.daily_weather.DailyForecast
 import com.sudo.weather.data.models.responses.daily_weather.DailyWeatherResponse
 import com.sudo.weather.domain.async.asyncTask
 import com.sudo.weather.domain.entities.DailyWeather
+import com.sudo.weather.domain.extensions.calendarFromMilliSeconds
 import kotlinx.coroutines.*
-import java.time.Instant
-import java.time.LocalTime
-import java.time.ZoneId
 
-@RequiresApi(Build.VERSION_CODES.S)
 fun DailyWeatherResponse.toDomainModel(): List<DailyWeather> {
     val textHeadline = this.Headline.Text;
     return this.DailyForecasts.map {
@@ -19,14 +16,13 @@ fun DailyWeatherResponse.toDomainModel(): List<DailyWeather> {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 fun DailyForecast.toDomainModel(textHeadline: String = ""): DailyWeather{
     return DailyWeather(
         text = textHeadline,
         maxTemperature = this.Temperature.Maximum.Value,
         minTemperature = this.Temperature.Minimum.Value,
-        sunRiseTime = LocalTime.ofInstant(Instant.ofEpochSecond(this.Sun.EpochRise.toLong()), ZoneId.systemDefault()),
-        sunSetTime = LocalTime.ofInstant(Instant.ofEpochSecond(this.Sun.EpochSet.toLong()), ZoneId.systemDefault()),
+        sunRiseTime = calendarFromMilliSeconds(this.Sun.EpochRise.toLong()),
+        sunSetTime = calendarFromMilliSeconds(this.Sun.EpochRise.toLong()),
         hoursOfSun = this.HoursOfSun,
         airQuality = this.AirAndPollen[0].Value,
         dayRainProbability = this.Day.RainProbability,
@@ -35,7 +31,6 @@ fun DailyForecast.toDomainModel(textHeadline: String = ""): DailyWeather{
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 suspend fun DailyWeatherResponse.toDomainModelAsync(): List<DailyWeather> {
     val textHeadline = this.Headline.Text
     val res: List<Deferred<DailyWeather>> = this.DailyForecasts.map {
@@ -44,7 +39,6 @@ suspend fun DailyWeatherResponse.toDomainModelAsync(): List<DailyWeather> {
     return res.awaitAll()
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 suspend fun DailyForecast.toDomainModelAsync(textHeadline: String = ""): DailyWeather{
     return DailyWeather(
         text = textHeadline,
@@ -55,7 +49,7 @@ suspend fun DailyForecast.toDomainModelAsync(textHeadline: String = ""): DailyWe
         dayRainProbability = this.Day.RainProbability,
         nightRainProbability = this.Night.RainProbability,
         link = this.Link,
-        sunRiseTime = withContext(Dispatchers.Default) { LocalTime.ofInstant(Instant.ofEpochSecond(this@toDomainModelAsync.Sun.EpochRise.toLong()), ZoneId.systemDefault()) },
-        sunSetTime = withContext(Dispatchers.Default) { LocalTime.ofInstant(Instant.ofEpochSecond(this@toDomainModelAsync.Sun.EpochSet.toLong()), ZoneId.systemDefault()) }
+        sunRiseTime = withContext(Dispatchers.Default) { calendarFromMilliSeconds(this@toDomainModelAsync.Sun.EpochRise.toLong()) },
+        sunSetTime = withContext(Dispatchers.Default) { calendarFromMilliSeconds(this@toDomainModelAsync.Sun.EpochSet.toLong()) }
     )
 }

@@ -10,8 +10,10 @@ android {
     compileSdk 32
 
     defaultConfig {
-        minSdk 21
+        minSdk 26
         targetSdk 32
+        versionCode 1
+        versionName '1.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -58,11 +60,9 @@ dependencies {
     // dagger-hilt
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-    kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -73,9 +73,4 @@ dependencies {
 
     // implement module
     implementation project(path: ':domain')
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }

@@ -14,12 +14,13 @@ import com.sudo.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi
 ) : WeatherRepository{
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override suspend fun getWeatherDaily(day: Int, locationKey: String): Status<List<DailyWeather>> {
         return try {
             val response = withContextHandler {
@@ -34,7 +35,6 @@ class WeatherRepositoryImpl @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override suspend fun getWeatherDailyOneDay(locationKey: String): Status<DailyWeather> {
         return try {
             val response = withContextHandler {
@@ -49,7 +49,6 @@ class WeatherRepositoryImpl @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getWeatherDetail(locationKey: String): Status<Weather> {
         return try {
             val response = withContextHandler {
